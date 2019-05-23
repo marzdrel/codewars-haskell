@@ -1,6 +1,6 @@
 module FindEvenSpec (spec) where
 
-import FindEven (findEvenIndex)  
+import FindEven (findEvenIndex, findEvenIndex2)  
 
 import Test.Hspec
 import Test.QuickCheck
@@ -8,8 +8,9 @@ import Text.Printf (printf)
 
 testFind :: [Int] -> Int -> Spec
 testFind arr u = 
-    it (printf "should return findEvenIndex for array : %s " (show arr)) $
-      findEvenIndex arr `shouldBe` u
+  it (printf "should return %d for array : %s " u (show arr)) $ do
+    findEvenIndex arr `shouldBe` u
+    findEvenIndex2 arr `shouldBe` u
 
 spec = do
   describe "findEvenIndex" $ do
