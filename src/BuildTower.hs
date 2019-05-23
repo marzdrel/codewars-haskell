@@ -7,6 +7,5 @@ buildTower floor =
     steps = map (\x -> x * 2 - 1) (take floor [1..])
     buildFloor max current = margin ++ stars ++ margin
       where
-        margin = take (div (max - current) 2) (repeat ' ')
-        stars = take (current) (repeat '*')
-
+        margin = replicate (div (max - current) 2) ' '
+        stars = replicate current '*'
