@@ -1,0 +1,1 @@
+--reload=src --command="stack ghci test/Spec.hs" -T=main
