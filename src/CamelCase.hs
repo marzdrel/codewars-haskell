@@ -8,4 +8,4 @@ toCamelCase src =
   concat $ head list : rest
   where
     list = S.splitOneOf "-_" src
-    rest = map (\(x:xs) -> C.toUpper x : xs) $ tail list
+    rest = map (\(x:xs) -> C.toUpper x : xs) $ filter (not . null) $ tail list
