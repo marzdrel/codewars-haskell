@@ -9,3 +9,5 @@ spec = do
       toCamelCase "the_stealth_warrior" `shouldBe` "theStealthWarrior" 
     it "converts upper case sentence" $ do
       toCamelCase "The-Stealth-Warrior" `shouldBe` "TheStealthWarrior"
+    it "converts upper case broken sentence" $ do
+      toCamelCase "The-_Stealth-_Warrior" `shouldBe` "TheStealthWarrior"
