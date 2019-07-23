@@ -16,9 +16,7 @@ processString arr
 
 revRot :: [Char] -> Int -> [Char]
 revRot strng sz =
-  concat $
-  map (concat . map show . processString) $
+  concatMap (concat . map show . processString) $
   map (map (\x -> read [x]::Int)) $
   filter ((== sz) . length) $
   splitString sz strng
-
