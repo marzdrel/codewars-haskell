@@ -2,7 +2,7 @@ module ValidPhoneNumber where
 
 validPhoneNumber :: String -> Bool
 validPhoneNumber number =
-  map (mapDigit) number == "(111) 111-1111"
+  map (mapDigit) number == "(000) 000-0000"
   where
     mapDigit char
       | elem char ['0'..'9'] = '0'
