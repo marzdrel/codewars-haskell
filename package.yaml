@@ -25,6 +25,7 @@ dependencies:
 - hspec-discover
 - QuickCheck
 - split
+- HUnit
 
 library:
   source-dirs: src
