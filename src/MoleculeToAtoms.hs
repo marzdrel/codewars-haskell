@@ -4,22 +4,16 @@ import Debug.Trace
 
 parseMolecule :: String -> Either String [(String, Int)]
 parseMolecule formula =
-  Right $ parseFormula formula [] []
+  Right $ parseFormula (reverse formula) [] [] 1
   where
-    parseFormula [] acc res
-      | null acc = res
-      | otherwise = addDict (last acc) 1 res
-    parseFormula (x:xs) (acc) res
-      | elem x ['A'..'Z'] && null acc =
-        parseFormula xs [[x]] res
+    parseFormula [] acc res mult = res
+    parseFormula (x:xs) acc res mult
       | elem x ['A'..'Z'] =
-        parseFormula xs [[x]] $
-        parseFormula xs [] (addDict (last acc) 1 res)
+        parseFormula xs [] (addDict (x:acc) mult res) 1
       | elem x ['a'..'z'] =
-        parseFormula xs (init acc ++ [last acc ++ [x]]) res
+        parseFormula xs (x:acc) res mult
       | elem x ['0'..'9'] =
-        parseFormula xs [] (addDict (last acc) (read [x]::Int) res)
-      | otherwise = res
+        parseFormula xs [] res (read [x]::Int)
 
 addDict key value assoc =
   (key, nextValue):(filter ((key /=) . fst) assoc)
