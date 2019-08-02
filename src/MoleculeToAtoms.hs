@@ -1,19 +1,42 @@
 module MoleculeToAtoms where
 
-import Debug.Trace
-
 parseMolecule :: String -> Either String [(String, Int)]
 parseMolecule formula =
-  Right $ parseFormula (reverse formula) [] [] 1
+  parseBracketsResult $ parseBrackets formula [] []
   where
+    parseBrackets :: String -> String -> String -> Either String String
+    parseBrackets [] [] str = Right (reverse str)
+    parseBrackets [] stack str = Left "error"
+    parseBrackets (x:xs) stack str
+      | elem x "[({" = parseBrackets xs (x:stack) (x:str)
+      | checkStack x '[' ']' stack = Left "error"
+      | checkStack x '(' ')' stack = Left "error"
+      | checkStack x '{' '}' stack = Left "error"
+      | elem x "])}" = parseBrackets xs (tail stack) (x:str)
+      | otherwise = parseBrackets xs stack (x:str)
+      where
+        checkStack e open close stack =
+           e == close && (null stack || (head stack) /= open)
+    parseBracketsResult (Left x) = Left x
+    parseBracketsResult (Right x) = parseFormulaResult $ parseFormula (reverse x) [] [] [1]
+    parseFormulaResult a
+      | null a = Left "error"
+      | otherwise = Right a
+    parseFormula :: String -> String -> [(String, Int)] -> [Int] -> [(String, Int)]
     parseFormula [] acc res mult = res
     parseFormula (x:xs) acc res mult
       | elem x ['A'..'Z'] =
-        parseFormula xs [] (addDict (x:acc) mult res) 1
-      | elem x ['a'..'z'] =
-        parseFormula xs (x:acc) res mult
+        parseFormula xs [] (addDict (x:acc) (product mult) res) (1:(tail mult))
+      | elem x ['a'..'z'] && null acc =
+        parseFormula xs [x] res mult
+      | elem x ['a'..'z'] = []
       | elem x ['0'..'9'] =
-        parseFormula xs [] res (read [x]::Int)
+        parseFormula xs [] res ((read [x]::Int):(tail mult))
+      | elem x "[{(" =
+        parseFormula xs [] res (init mult)
+      | elem x "]})" =
+        parseFormula xs [] res (1:mult)
+      | otherwise = res
 
 addDict key value assoc =
   (key, nextValue):(filter ((key /=) . fst) assoc)
