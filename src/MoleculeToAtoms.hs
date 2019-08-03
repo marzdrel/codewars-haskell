@@ -1,5 +1,9 @@
 module MoleculeToAtoms where
 
+import Debug.Trace
+
+debugGuard = (flip trace) False
+
 parseMolecule :: String -> Either String [(String, Int)]
 parseMolecule formula =
   parseBracketsResult $ parseBrackets formula [] []
@@ -34,6 +38,7 @@ parseMolecule formula =
     parseFormula :: String -> String -> [(String, Int)] -> [Int] -> [(String, Int)]
     parseFormula [] acc res mult = res
     parseFormula (x:xs) acc res mult
+      | debugGuard ("DEBUG: " ++ [x] ++ " " ++ (show mult)) = undefined
       | elem x ['A'..'Z'] =
         parseFormula xs [] (addDict (x:acc) (product mult) res) (1:(tail mult))
       | elem x ['a'..'z'] && null acc =
@@ -42,7 +47,7 @@ parseMolecule formula =
       | elem x ['0'..'9'] =
         parseFormulaN xs [] res ((read [x]::Int):(tail mult))
       | elem x "[{(" =
-        parseFormula xs [] res (init mult)
+        parseFormula xs [] res (1:(tail . tail) mult)
       | elem x "]})" =
         parseFormula xs [] res (1:mult)
       | otherwise = res
