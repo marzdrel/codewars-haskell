@@ -17,11 +17,20 @@ parseMolecule formula =
       where
         checkStack e open close stack =
            e == close && (null stack || (head stack) /= open)
+
     parseBracketsResult (Left x) = Left x
     parseBracketsResult (Right x) = parseFormulaResult $ parseFormula (reverse x) [] [] [1]
     parseFormulaResult a
       | null a = Left "error"
       | otherwise = Right a
+
+    parseFormulaN :: String -> String -> [(String, Int)] -> [Int] -> [(String, Int)]
+    parseFormulaN (x:xs) acc res mult
+      | elem x ['0'..'9'] = parseFormula xs [] res (replacedCounter:(tail mult))
+      | otherwise = parseFormula (x:xs) acc res mult
+        where
+          replacedCounter = (head mult) + (10 * read [x]::Int)
+
     parseFormula :: String -> String -> [(String, Int)] -> [Int] -> [(String, Int)]
     parseFormula [] acc res mult = res
     parseFormula (x:xs) acc res mult
@@ -31,7 +40,7 @@ parseMolecule formula =
         parseFormula xs [x] res mult
       | elem x ['a'..'z'] = []
       | elem x ['0'..'9'] =
-        parseFormula xs [] res ((read [x]::Int):(tail mult))
+        parseFormulaN xs [] res ((read [x]::Int):(tail mult))
       | elem x "[{(" =
         parseFormula xs [] res (init mult)
       | elem x "]})" =
