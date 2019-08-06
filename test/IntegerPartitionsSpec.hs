@@ -24,7 +24,7 @@ import Data.List (sort)
 import IntegerPartitions (indices)
 import Test.Hspec
 
-main = hspec $ do
+spec = do
   describe "Integer partitions" $ do
     it "works for quadratic triangles" $ do
       sort (indices 3 2) `shouldBe` [[0,0,2],
