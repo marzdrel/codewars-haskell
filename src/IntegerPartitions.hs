@@ -27,3 +27,6 @@ indices n d =
   where
     reFlow n = map (\x -> (init n) ++ x) (splitInt (last n))
     splitInt n = map (\x -> [x, n - x]) [0..n]
+
+indices2 1 d = [[d]]
+indices2 n d = [i:xs | i <- [0..d], xs <- indices (n-1) (d-i)]
