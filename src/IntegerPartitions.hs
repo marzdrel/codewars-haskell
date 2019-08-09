@@ -1,5 +1,3 @@
-{-# LANGUAGE UnicodeSyntax #-}
-
 {-
 A generalization of Bézier surfaces, called the S-patch, uses an
 interesting scheme for indexing its control points. In the case of an
@@ -25,7 +23,7 @@ module IntegerPartitions where
 indices :: Int -> Int -> [[Int]]
 indices 1 0 = [[0]]
 indices n d =
-  last $ take (n - 1) $ iterate (concat . map (reFlow)) (splitInt d)
+  last $ take (n - 1) $ iterate (concatMap (reFlow)) (splitInt d)
   where
     reFlow n = map (\x -> (init n) ++ x) (splitInt (last n))
     splitInt n = map (\x -> [x, n - x]) [0..n]
